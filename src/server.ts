@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config({ path: ['.env.local', '.env'] });
 import { buildApp } from './app.js';
 import { createDb } from './db/connection.js';
 import { createRecipeRepository } from './db/repositories/recipe-repository.js';
