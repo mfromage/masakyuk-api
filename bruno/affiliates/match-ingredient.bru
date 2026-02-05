@@ -1,0 +1,15 @@
+meta {
+  name: Match Ingredient
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/affiliates/match?ingredient=minyak goreng
+  body: none
+  auth: none
+}
+
+params:query {
+  ingredient: minyak goreng
+}
