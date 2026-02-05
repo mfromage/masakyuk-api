@@ -46,7 +46,14 @@ function readRawBody(req: IncomingMessage): Promise<Buffer> {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const app = await getApp();
 
+  // DEBUG: log what Vercel provides for the request body
+  console.log('[debug] req.body type:', typeof req.body);
+  console.log('[debug] req.body isBuffer:', Buffer.isBuffer(req.body));
+  console.log('[debug] req.readable:', req.readable);
+  console.log('[debug] content-type:', req.headers['content-type']);
+
   const rawBody = await readRawBody(req);
+  console.log('[debug] rawBody length:', rawBody.length);
 
   // Strip content-length — app.inject() recalculates it from the payload.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
