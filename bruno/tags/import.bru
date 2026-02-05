@@ -6,17 +6,10 @@ meta {
 
 post {
   url: {{baseUrl}}/tags/import
-  body: text
+  body: multipartForm
   auth: none
 }
 
-headers {
-  Content-Type: text/csv
-}
-
-body:text {
-  key,type,label_en,label_id
-  japanese,cuisine,Japanese,Jepang
-  korean,cuisine,Korean,Korea
-  quick,time,Quick,Cepat
+body:multipart-form {
+  file: @file(../../data/tags.csv)
 }

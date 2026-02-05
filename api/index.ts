@@ -20,7 +20,7 @@ let appPromise: ReturnType<typeof buildApp> | null = null;
 
 function getApp() {
   if (!appPromise) {
-    appPromise = buildApp({ recipeRepo, affiliateRepo, logger: true });
+    appPromise = buildApp({ recipeRepo, affiliateRepo, db, logger: true });
   }
   return appPromise;
 }
@@ -28,11 +28,27 @@ function getApp() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const app = await getApp();
 
+  // Strip content-length: Vercel already parsed the body, so the original
+  // header no longer matches the payload size. app.inject() recalculates it.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { 'content-length': _cl, ...headers } = req.headers as Record<string, string>;
+
+  // Vercel may provide req.body as Buffer, string, parsed object, or undefined
+  // depending on Content-Type. Keep Buffer raw for multipart boundaries.
+  let payload: string | Buffer | undefined;
+  if (Buffer.isBuffer(req.body)) {
+    payload = req.body;
+  } else if (typeof req.body === 'string') {
+    payload = req.body;
+  } else if (req.body != null) {
+    payload = JSON.stringify(req.body);
+  }
+
   const injectOpts: InjectOptions = {
     method: req.method as InjectOptions['method'],
     url: req.url as string,
-    headers: req.headers as Record<string, string>,
-    payload: req.body as string,
+    headers,
+    payload,
   };
 
   const response = await app.inject(injectOpts);

@@ -32,6 +32,24 @@ const mockImportAffiliates = vi.mocked(importAffiliatesCsv);
 // Minimal mock db — the real DB calls are mocked at the service level
 const mockDb = {} as Database;
 
+const BOUNDARY = '----TestBoundary';
+
+/** Build a multipart/form-data payload with a single file field */
+function multipartPayload(csvContent: string, filename = 'data.csv') {
+  const body =
+    `--${BOUNDARY}\r\n` +
+    `Content-Disposition: form-data; name="file"; filename="${filename}"\r\n` +
+    `Content-Type: text/csv\r\n` +
+    `\r\n` +
+    `${csvContent}\r\n` +
+    `--${BOUNDARY}--\r\n`;
+  return body;
+}
+
+function multipartHeaders() {
+  return { 'content-type': `multipart/form-data; boundary=${BOUNDARY}` };
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
 });
@@ -41,12 +59,13 @@ describe('POST /tags/import', () => {
     mockImportTags.mockResolvedValue({ imported: 3 });
     const app = await buildTestApp({ db: mockDb });
 
+    const csv =
+      'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang\nkorean,cuisine,Korean,Korea\nquick,time,Quick,Cepat';
     const response = await app.inject({
       method: 'POST',
       url: '/tags/import',
-      headers: { 'content-type': 'text/csv' },
-      payload:
-        'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang\nkorean,cuisine,Korean,Korea\nquick,time,Quick,Cepat',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(200);
@@ -60,11 +79,12 @@ describe('POST /tags/import', () => {
     );
     const app = await buildTestApp({ db: mockDb });
 
+    const csv = 'key,type,label_en,label_id\n,cuisine,Japanese,Jepang';
     const response = await app.inject({
       method: 'POST',
       url: '/tags/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'key,type,label_en,label_id\n,cuisine,Japanese,Jepang',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(400);
@@ -74,14 +94,14 @@ describe('POST /tags/import', () => {
     expect(body.details[0]).toContain('key is required');
   });
 
-  it('returns 400 on empty body', async () => {
+  it('returns 400 when no file is uploaded', async () => {
     const app = await buildTestApp({ db: mockDb });
 
     const response = await app.inject({
       method: 'POST',
       url: '/tags/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: '',
+      headers: multipartHeaders(),
+      payload: `--${BOUNDARY}--\r\n`,
     });
 
     expect(response.statusCode).toBe(400);
@@ -92,11 +112,12 @@ describe('POST /tags/import', () => {
     mockImportTags.mockRejectedValue(new Error('connection refused'));
     const app = await buildTestApp({ db: mockDb });
 
+    const csv = 'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang';
     const response = await app.inject({
       method: 'POST',
       url: '/tags/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(500);
@@ -106,11 +127,12 @@ describe('POST /tags/import', () => {
   it('returns 500 when db is not configured', async () => {
     const app = await buildTestApp(); // no db
 
+    const csv = 'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang';
     const response = await app.inject({
       method: 'POST',
       url: '/tags/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(500);
@@ -123,12 +145,13 @@ describe('POST /recipes/import', () => {
     mockImportRecipes.mockResolvedValue({ imported: 2 });
     const app = await buildTestApp({ db: mockDb });
 
+    const csv =
+      'name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags\nNasi Goreng,Fried rice,30,,,,[],[],""\nMie Ayam,Chicken noodles,25,,,,[],[],""';
     const response = await app.inject({
       method: 'POST',
       url: '/recipes/import',
-      headers: { 'content-type': 'text/csv' },
-      payload:
-        'name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags\nNasi Goreng,Fried rice,30,,,,[],[],""\nMie Ayam,Chicken noodles,25,,,,[],[],""',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(200);
@@ -142,11 +165,12 @@ describe('POST /recipes/import', () => {
     );
     const app = await buildTestApp({ db: mockDb });
 
+    const csv = 'name,description\n,desc';
     const response = await app.inject({
       method: 'POST',
       url: '/recipes/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'name,description\n,desc',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(400);
@@ -161,12 +185,13 @@ describe('POST /recipes/import', () => {
     );
     const app = await buildTestApp({ db: mockDb });
 
+    const csv =
+      'name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags\nNasi Goreng,,,,,,[],[],nonexistent';
     const response = await app.inject({
       method: 'POST',
       url: '/recipes/import',
-      headers: { 'content-type': 'text/csv' },
-      payload:
-        'name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags\nNasi Goreng,,,,,,[],[],nonexistent',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(400);
@@ -179,11 +204,12 @@ describe('POST /recipes/import', () => {
     mockImportRecipes.mockRejectedValue(new Error('connection refused'));
     const app = await buildTestApp({ db: mockDb });
 
+    const csv = 'name,description\nTest,desc';
     const response = await app.inject({
       method: 'POST',
       url: '/recipes/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'name,description\nTest,desc',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(500);
@@ -196,12 +222,13 @@ describe('POST /affiliates/import', () => {
     mockImportAffiliates.mockResolvedValue({ imported: 5 });
     const app = await buildTestApp({ db: mockDb });
 
+    const csv =
+      'canonical_name,link,category,aliases\nMinyak Goreng,https://example.com,oil,cooking oil|vegetable oil';
     const response = await app.inject({
       method: 'POST',
       url: '/affiliates/import',
-      headers: { 'content-type': 'text/csv' },
-      payload:
-        'canonical_name,link,category,aliases\nMinyak Goreng,https://example.com,oil,cooking oil|vegetable oil',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(200);
@@ -217,11 +244,12 @@ describe('POST /affiliates/import', () => {
     );
     const app = await buildTestApp({ db: mockDb });
 
+    const csv = 'canonical_name,link,category,aliases\n,https://example.com,oil,';
     const response = await app.inject({
       method: 'POST',
       url: '/affiliates/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'canonical_name,link,category,aliases\n,https://example.com,oil,',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(400);
@@ -234,11 +262,12 @@ describe('POST /affiliates/import', () => {
     mockImportAffiliates.mockRejectedValue(new Error('connection refused'));
     const app = await buildTestApp({ db: mockDb });
 
+    const csv = 'canonical_name,link,category,aliases\nTest,https://example.com,,';
     const response = await app.inject({
       method: 'POST',
       url: '/affiliates/import',
-      headers: { 'content-type': 'text/csv' },
-      payload: 'canonical_name,link,category,aliases\nTest,https://example.com,,',
+      headers: multipartHeaders(),
+      payload: multipartPayload(csv),
     });
 
     expect(response.statusCode).toBe(500);

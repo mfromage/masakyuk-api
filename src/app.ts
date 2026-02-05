@@ -1,5 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
 import type { RecipeRepository } from './db/repositories/recipe-repository.js';
 import type { AffiliateRepository } from './db/repositories/affiliate-repository.js';
 import type { Database } from './db/connection.js';
@@ -25,9 +26,13 @@ export async function buildApp(opts: BuildAppOptions): Promise<FastifyInstance> 
     app.decorate('db', opts.db);
   }
 
-  // Parse text/csv bodies as raw strings
-  app.addContentTypeParser('text/csv', { parseAs: 'string' }, (_req, body, done) => {
-    done(null, body);
+  await app.register(multipart);
+
+  // Reject raw text/csv with a helpful message — clients must use multipart file upload
+  app.addContentTypeParser('text/csv', (_req, _body, done) => {
+    done(
+      new Error('text/csv is not supported. Upload a CSV file via multipart/form-data instead.'),
+    );
   });
 
   app.get('/health', async () => ({

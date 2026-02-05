@@ -6,16 +6,10 @@ meta {
 
 post {
   url: {{baseUrl}}/affiliates/import
-  body: text
+  body: multipartForm
   auth: none
 }
 
-headers {
-  Content-Type: text/csv
-}
-
-body:text {
-  canonical_name,link,category,aliases
-  Minyak Goreng,https://example.com/minyak,oil,cooking oil|vegetable oil
-  Bawang Putih,https://example.com/bawang,spice,garlic
+body:multipart-form {
+  file: @file(../../data/affiliates.csv)
 }

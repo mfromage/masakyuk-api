@@ -8,10 +8,11 @@ export async function tagRoutes(app: FastifyInstance) {
       return reply.status(500).send({ error: 'Import failed' });
     }
 
-    const csvContent = request.body as string;
-    if (!csvContent) {
-      return reply.status(400).send({ error: 'Validation failed', details: ['Empty CSV body'] });
+    const file = await request.file();
+    if (!file) {
+      return reply.status(400).send({ error: 'Validation failed', details: ['No file uploaded'] });
     }
+    const csvContent = (await file.toBuffer()).toString('utf-8');
 
     try {
       const result = await importTagsCsv(app.db, csvContent);
