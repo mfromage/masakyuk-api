@@ -1,0 +1,28 @@
+key,type,label_en,label_id
+chinese,cuisine,Chinese,Cina
+indian,cuisine,Indian,India
+indonesian,cuisine,Indonesian,Indonesia
+japanese,cuisine,Japanese,Jepang
+korean,cuisine,Korean,Korea
+malay,cuisine,Malay,Melayu
+thai,cuisine,Thai,Thailand
+western,cuisine,Western,Barat
+dairy-free,diet,Dairy Free,Bebas Susu
+gluten-free,diet,Gluten Free,Bebas Gluten
+halal,diet,Halal,Halal
+low-carb,diet,Low Carb,Rendah Karbohidrat
+vegan,diet,Vegan,Vegan
+vegetarian,diet,Vegetarian,Vegetarian
+easy,difficulty,Easy,Mudah
+hard,difficulty,Hard,Sulit
+medium,difficulty,Medium,Sedang
+breakfast,meal,Breakfast,Sarapan
+dessert,meal,Dessert,Hidangan Penutup
+dinner,meal,Dinner,Makan Malam
+lunch,meal,Lunch,Makan Siang
+side-dish,meal,Side Dish,Lauk
+snack,meal,Snack,Camilan
+over-60min,time,Over 1 hour,Lebih dari 1 jam
+under-15min,time,Under 15 min,Kurang dari 15 menit
+under-30min,time,Under 30 min,Kurang dari 30 menit
+under-60min,time,Under 1 hour,Kurang dari 1 jam
