@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { InjectOptions } from 'fastify';
 import { buildApp } from '../src/app.js';
 import { createDb } from '../src/db/connection.js';
 import { createRecipeRepository } from '../src/db/repositories/recipe-repository.js';
@@ -26,12 +27,14 @@ function getApp() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const app = await getApp();
 
-  const response = await app.inject({
-    method: req.method as string,
+  const injectOpts: InjectOptions = {
+    method: req.method as InjectOptions['method'],
     url: req.url as string,
     headers: req.headers as Record<string, string>,
     payload: req.body as string,
-  });
+  };
+
+  const response = await app.inject(injectOpts);
 
   res.status(response.statusCode);
   for (const [key, value] of Object.entries(response.headers)) {
