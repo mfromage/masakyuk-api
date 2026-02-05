@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config({ path: ['.env.local', '.env'] });
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { InjectOptions } from 'fastify';
