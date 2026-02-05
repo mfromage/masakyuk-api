@@ -1,2 +1,2 @@
-export * from './recipes';
-export * from './affiliates';
+export * from './recipes.js';
+export * from './affiliates.js';
