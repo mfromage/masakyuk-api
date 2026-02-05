@@ -138,6 +138,8 @@ async function exportCsv() {
     link: a.link,
     category: a.category ?? '',
     aliases: (a.aliases ?? []).join('|'),
+    partner: a.partner,
+    search_url_template: a.searchUrlTemplate ?? '',
   }));
 
   const affiliatesCsv = Papa.unparse(affiliateRows);

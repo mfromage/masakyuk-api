@@ -30,6 +30,8 @@ function makeAffiliateRow(overrides: Partial<AffiliateCsvRow> = {}): AffiliateCs
     link: 'https://tokopedia.link/minyak-goreng',
     category: 'oil',
     aliases: 'cooking oil|vegetable oil',
+    partner: 'tokopedia',
+    search_url_template: 'https://tokopedia.link/search?q=[keyword]',
     ...overrides,
   };
 }
@@ -130,6 +132,12 @@ describe('validateAffiliateRows', () => {
     const errors = validateAffiliateRows([makeAffiliateRow({ link: '' })]);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatchObject({ field: 'link' });
+  });
+
+  it('detects missing partner', () => {
+    const errors = validateAffiliateRows([makeAffiliateRow({ partner: '' })]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({ field: 'partner', message: 'partner is required' });
   });
 
   it('detects duplicate canonical_name', () => {

@@ -50,9 +50,9 @@ export async function affiliateRoutes(app: FastifyInstance) {
     };
   });
 
-  // GET /affiliates — list all affiliate products
+  // GET /affiliates — affiliate product catalog
   app.get('/', async () => {
-    return app.affiliateRepo.findAll();
+    return app.affiliateRepo.findCatalog();
   });
 
   // GET /affiliates/:id — single affiliate product

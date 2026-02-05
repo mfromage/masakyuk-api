@@ -223,7 +223,7 @@ describe('POST /affiliates/import', () => {
     const app = await buildTestApp({ db: mockDb });
 
     const csv =
-      'canonical_name,link,category,aliases\nMinyak Goreng,https://example.com,oil,cooking oil|vegetable oil';
+      'canonical_name,link,category,aliases,partner,search_url_template\nMinyak Goreng,https://example.com,oil,cooking oil|vegetable oil,tokopedia,https://tokopedia.link/search?q=[keyword]';
     const response = await app.inject({
       method: 'POST',
       url: '/affiliates/import',
@@ -244,7 +244,8 @@ describe('POST /affiliates/import', () => {
     );
     const app = await buildTestApp({ db: mockDb });
 
-    const csv = 'canonical_name,link,category,aliases\n,https://example.com,oil,';
+    const csv =
+      'canonical_name,link,category,aliases,partner,search_url_template\n,https://example.com,oil,,tokopedia,';
     const response = await app.inject({
       method: 'POST',
       url: '/affiliates/import',
@@ -262,7 +263,8 @@ describe('POST /affiliates/import', () => {
     mockImportAffiliates.mockRejectedValue(new Error('connection refused'));
     const app = await buildTestApp({ db: mockDb });
 
-    const csv = 'canonical_name,link,category,aliases\nTest,https://example.com,,';
+    const csv =
+      'canonical_name,link,category,aliases,partner,search_url_template\nTest,https://example.com,,,tokopedia,';
     const response = await app.inject({
       method: 'POST',
       url: '/affiliates/import',

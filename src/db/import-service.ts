@@ -225,6 +225,8 @@ export async function importAffiliatesCsv(db: Database, csvContent: string): Pro
         link: a.link.trim(),
         category: a.category?.trim() || null,
         aliases: a.aliases?.trim() ? a.aliases.split('|').map((s) => s.trim()) : null,
+        partner: a.partner.trim(),
+        searchUrlTemplate: a.search_url_template?.trim() || null,
       })),
     );
   });

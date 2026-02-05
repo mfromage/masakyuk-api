@@ -8,6 +8,8 @@ export interface AffiliateRow {
   link: string;
   aliases: string[] | null;
   category: string | null;
+  partner: string;
+  searchUrlTemplate: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,9 +19,22 @@ export interface AffiliateMatch {
   matchType: 'exact' | 'alias' | 'fuzzy';
 }
 
+export interface CatalogProduct {
+  ingredient: string;
+  link: string;
+  aliases: string[] | null;
+  partner: string;
+}
+
+export interface AffiliateCatalog {
+  products: CatalogProduct[];
+  searchUrlTemplate: string | null;
+}
+
 export interface AffiliateRepository {
   findAll(): Promise<AffiliateRow[]>;
   findById(id: number): Promise<AffiliateRow | undefined>;
+  findCatalog(): Promise<AffiliateCatalog>;
   matchIngredient(name: string): Promise<AffiliateMatch | undefined>;
 }
 
@@ -27,6 +42,22 @@ export function createAffiliateRepository(db: Database): AffiliateRepository {
   return {
     async findAll() {
       return db.select().from(affiliateProducts);
+    },
+
+    async findCatalog(): Promise<AffiliateCatalog> {
+      const rows = await db
+        .select()
+        .from(affiliateProducts)
+        .orderBy(affiliateProducts.canonicalName);
+      return {
+        products: rows.map((r) => ({
+          ingredient: r.canonicalName,
+          link: r.link,
+          aliases: r.aliases,
+          partner: r.partner,
+        })),
+        searchUrlTemplate: rows[0]?.searchUrlTemplate ?? null,
+      };
     },
 
     async findById(id: number) {

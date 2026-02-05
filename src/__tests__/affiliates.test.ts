@@ -10,15 +10,27 @@ const sampleProduct: AffiliateRow = {
   link: 'https://affiliate.example.com/minyak-goreng',
   aliases: ['cooking oil', 'vegetable oil'],
   category: 'oil',
+  partner: 'tokopedia',
+  searchUrlTemplate: 'https://tokopedia.link/search?q=[keyword]',
   createdAt: now,
   updatedAt: now,
 };
 
 describe('GET /affiliates', () => {
-  it('returns a list of affiliate products', async () => {
+  it('returns affiliate catalog with products and searchUrlTemplate', async () => {
     const app = await buildTestApp({
       affiliateRepo: {
-        findAll: async () => [sampleProduct],
+        findCatalog: async () => ({
+          products: [
+            {
+              ingredient: 'minyak goreng',
+              link: 'https://affiliate.example.com/minyak-goreng',
+              aliases: ['cooking oil', 'vegetable oil'],
+              partner: 'tokopedia',
+            },
+          ],
+          searchUrlTemplate: 'https://tokopedia.link/search?q=[keyword]',
+        }),
       },
     });
 
@@ -26,8 +38,25 @@ describe('GET /affiliates', () => {
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
-    expect(body).toHaveLength(1);
-    expect(body[0].canonicalName).toBe('minyak goreng');
+    expect(body.products).toHaveLength(1);
+    expect(body.products[0].ingredient).toBe('minyak goreng');
+    expect(body.products[0].partner).toBe('tokopedia');
+    expect(body.searchUrlTemplate).toBe('https://tokopedia.link/search?q=[keyword]');
+  });
+
+  it('returns empty catalog when no products exist', async () => {
+    const app = await buildTestApp({
+      affiliateRepo: {
+        findCatalog: async () => ({ products: [], searchUrlTemplate: null }),
+      },
+    });
+
+    const response = await app.inject({ method: 'GET', url: '/affiliates' });
+
+    expect(response.statusCode).toBe(200);
+    const body = response.json();
+    expect(body.products).toHaveLength(0);
+    expect(body.searchUrlTemplate).toBeNull();
   });
 });
 

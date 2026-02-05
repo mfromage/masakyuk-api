@@ -8,6 +8,8 @@ export const affiliateProducts = pgTable(
     link: text('link').notNull(),
     aliases: text('aliases').array(),
     category: text('category'),
+    partner: text('partner').notNull().default('tokopedia'),
+    searchUrlTemplate: text('search_url_template'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },

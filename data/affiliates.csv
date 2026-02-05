@@ -1,22 +1,22 @@
-canonical_name,link,category,aliases
-bawang merah,https://tokopedia.link/bawang-merah,spice,shallot|red onion
-bawang putih,https://tokopedia.link/bawang-putih,spice,garlic
-cabai merah,https://tokopedia.link/cabai-merah,spice,red chili|chili pepper
-cabai rawit,https://tokopedia.link/cabai-rawit,spice,bird's eye chili
-daun jeruk,https://tokopedia.link/daun-jeruk,herb,kaffir lime leaves
-daun salam,https://tokopedia.link/daun-salam,herb,bay leaf|indonesian bay leaf
-garam,https://tokopedia.link/garam,seasoning,salt
-gula pasir,https://tokopedia.link/gula-pasir,seasoning,sugar|white sugar
-jahe,https://tokopedia.link/jahe,spice,ginger
-kacang tanah,https://tokopedia.link/kacang-tanah,nut,peanut|groundnut
-kecap manis,https://tokopedia.link/kecap-manis,sauce,sweet soy sauce
-ketumbar,https://tokopedia.link/ketumbar,spice,coriander|coriander seeds
-kunyit,https://tokopedia.link/kunyit,spice,turmeric
-merica,https://tokopedia.link/merica,spice,pepper|black pepper
-minyak goreng,https://tokopedia.link/minyak-goreng,oil,cooking oil|vegetable oil
-santan,https://tokopedia.link/santan,dairy-alt,coconut milk|coconut cream
-serai,https://tokopedia.link/serai,herb,lemongrass
-tahu,https://tokopedia.link/tahu,protein,tofu|bean curd
-tempe,https://tokopedia.link/tempe,protein,tempeh
-tepung beras,https://tokopedia.link/tepung-beras,flour,rice flour
-tepung terigu,https://tokopedia.link/tepung-terigu,flour,wheat flour|all-purpose flour
+canonical_name,link,category,aliases,partner,search_url_template
+bawang merah,https://tokopedia.link/bawang-merah,spice,shallot|red onion,tokopedia,https://tokopedia.link/search?q=[keyword]
+bawang putih,https://tokopedia.link/bawang-putih,spice,garlic,tokopedia,https://tokopedia.link/search?q=[keyword]
+cabai merah,https://tokopedia.link/cabai-merah,spice,red chili|chili pepper,tokopedia,https://tokopedia.link/search?q=[keyword]
+cabai rawit,https://tokopedia.link/cabai-rawit,spice,bird's eye chili,tokopedia,https://tokopedia.link/search?q=[keyword]
+daun jeruk,https://tokopedia.link/daun-jeruk,herb,kaffir lime leaves,tokopedia,https://tokopedia.link/search?q=[keyword]
+daun salam,https://tokopedia.link/daun-salam,herb,bay leaf|indonesian bay leaf,tokopedia,https://tokopedia.link/search?q=[keyword]
+garam,https://tokopedia.link/garam,seasoning,salt,tokopedia,https://tokopedia.link/search?q=[keyword]
+gula pasir,https://tokopedia.link/gula-pasir,seasoning,sugar|white sugar,tokopedia,https://tokopedia.link/search?q=[keyword]
+jahe,https://tokopedia.link/jahe,spice,ginger,tokopedia,https://tokopedia.link/search?q=[keyword]
+kacang tanah,https://tokopedia.link/kacang-tanah,nut,peanut|groundnut,tokopedia,https://tokopedia.link/search?q=[keyword]
+kecap manis,https://tokopedia.link/kecap-manis,sauce,sweet soy sauce,tokopedia,https://tokopedia.link/search?q=[keyword]
+ketumbar,https://tokopedia.link/ketumbar,spice,coriander|coriander seeds,tokopedia,https://tokopedia.link/search?q=[keyword]
+kunyit,https://tokopedia.link/kunyit,spice,turmeric,tokopedia,https://tokopedia.link/search?q=[keyword]
+merica,https://tokopedia.link/merica,spice,pepper|black pepper,tokopedia,https://tokopedia.link/search?q=[keyword]
+minyak goreng,https://tokopedia.link/minyak-goreng,oil,cooking oil|vegetable oil,tokopedia,https://tokopedia.link/search?q=[keyword]
+santan,https://tokopedia.link/santan,dairy-alt,coconut milk|coconut cream,tokopedia,https://tokopedia.link/search?q=[keyword]
+serai,https://tokopedia.link/serai,herb,lemongrass,tokopedia,https://tokopedia.link/search?q=[keyword]
+tahu,https://tokopedia.link/tahu,protein,tofu|bean curd,tokopedia,https://tokopedia.link/search?q=[keyword]
+tempe,https://tokopedia.link/tempe,protein,tempeh,tokopedia,https://tokopedia.link/search?q=[keyword]
+tepung beras,https://tokopedia.link/tepung-beras,flour,rice flour,tokopedia,https://tokopedia.link/search?q=[keyword]
+tepung terigu,https://tokopedia.link/tepung-terigu,flour,wheat flour|all-purpose flour,tokopedia,https://tokopedia.link/search?q=[keyword]

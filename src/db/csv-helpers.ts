@@ -42,6 +42,8 @@ export interface AffiliateCsvRow {
   link: string;
   category: string;
   aliases: string; // pipe-delimited
+  partner: string;
+  search_url_template: string;
 }
 
 export interface TagCsvRow {
@@ -129,6 +131,10 @@ export function validateAffiliateRows(rows: AffiliateCsvRow[]): ValidationError[
 
     if (!row.link?.trim()) {
       errors.push({ row: rowNum, field: 'link', message: 'link is required' });
+    }
+
+    if (!row.partner?.trim()) {
+      errors.push({ row: rowNum, field: 'partner', message: 'partner is required' });
     }
   }
 
