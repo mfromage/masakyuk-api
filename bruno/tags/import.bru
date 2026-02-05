@@ -1,0 +1,22 @@
+meta {
+  name: Import Tags
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/tags/import
+  body: text
+  auth: none
+}
+
+headers {
+  Content-Type: text/csv
+}
+
+body:text {
+  key,type,label_en,label_id
+  japanese,cuisine,Japanese,Jepang
+  korean,cuisine,Korean,Korea
+  quick,time,Quick,Cepat
+}

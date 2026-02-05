@@ -1,0 +1,20 @@
+meta {
+  name: Import Recipes
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/recipes/import
+  body: text
+  auth: none
+}
+
+headers {
+  Content-Type: text/csv
+}
+
+body:text {
+  name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags
+  Nasi Goreng,Indonesian fried rice,30,,,,"[{""name"":""nasi"",""isMain"":true,""position"":0}]","[{""description"":""Heat oil"",""position"":0}]","[]",japanese
+}

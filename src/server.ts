@@ -20,6 +20,7 @@ async function start() {
   const app = await buildApp({
     recipeRepo,
     affiliateRepo,
+    db,
     logger: process.env.NODE_ENV !== 'test',
   });
 

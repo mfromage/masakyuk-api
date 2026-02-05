@@ -9,6 +9,7 @@ import type {
   AffiliateRow,
   AffiliateMatch,
 } from '../../db/repositories/affiliate-repository.js';
+import type { Database } from '../../db/connection.js';
 
 export function createMockRecipeRepo(overrides: Partial<RecipeRepository> = {}): RecipeRepository {
   return {
@@ -34,9 +35,11 @@ export function createMockAffiliateRepo(
 export async function buildTestApp(opts?: {
   recipeRepo?: Partial<RecipeRepository>;
   affiliateRepo?: Partial<AffiliateRepository>;
+  db?: Database;
 }) {
   return buildApp({
     recipeRepo: createMockRecipeRepo(opts?.recipeRepo),
     affiliateRepo: createMockAffiliateRepo(opts?.affiliateRepo),
+    db: opts?.db,
   });
 }

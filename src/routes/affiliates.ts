@@ -1,6 +1,33 @@
 import type { FastifyInstance } from 'fastify';
+import { importAffiliatesCsv, CsvValidationError } from '../db/import-service.js';
 
 export async function affiliateRoutes(app: FastifyInstance) {
+  // POST /affiliates/import — bulk import affiliate products from CSV
+  app.post('/import', async (request, reply) => {
+    if (!app.db) {
+      return reply.status(500).send({ error: 'Import failed' });
+    }
+
+    const csvContent = request.body as string;
+    if (!csvContent) {
+      return reply.status(400).send({ error: 'Validation failed', details: ['Empty CSV body'] });
+    }
+
+    try {
+      const result = await importAffiliatesCsv(app.db, csvContent);
+      return { imported: result.imported };
+    } catch (err) {
+      if (err instanceof CsvValidationError) {
+        return reply.status(400).send({
+          error: 'Validation failed',
+          details: err.errors.map((e) => `Row ${e.row}, ${e.field}: ${e.message}`),
+        });
+      }
+      request.log.error(err, 'Affiliate import failed');
+      return reply.status(500).send({ error: 'Import failed' });
+    }
+  });
+
   // GET /affiliates/match?ingredient=... — match ingredient to affiliate
   // IMPORTANT: Register before /:id to prevent "match" being captured as an id
   app.get<{ Querystring: { ingredient?: string } }>('/match', async (request, reply) => {
