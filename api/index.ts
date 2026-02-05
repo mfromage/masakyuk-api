@@ -44,22 +44,6 @@ function readRawBody(req: IncomingMessage): Promise<Buffer> {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Temporary debug endpoint: curl -H 'x-debug: 1' -F file=@data.csv ...
-  if (req.headers['x-debug'] === '1') {
-    const rawBody = await readRawBody(req);
-    res.json({
-      bodyType: typeof req.body,
-      bodyIsBuffer: Buffer.isBuffer(req.body),
-      bodyLength: req.body ? ((req.body as string).length ?? 0) : 0,
-      readable: req.readable,
-      readableEnded: req.readableEnded,
-      contentType: req.headers['content-type'],
-      rawBodyLength: rawBody.length,
-      rawBodyPreview: rawBody.subarray(0, 200).toString('utf-8'),
-    });
-    return;
-  }
-
   const app = await getApp();
 
   const rawBody = await readRawBody(req);
