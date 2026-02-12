@@ -68,9 +68,9 @@ export async function recipeRoutes(app: FastifyInstance) {
 
     const enrichedIngredients = await Promise.all(
       recipe.ingredients.map(async (ingredient) => {
-        const match = await app.affiliateRepo.matchIngredient(ingredient.name);
+        const match = await app.affiliateRepo.matchIngredient(ingredient);
         return {
-          ...ingredient,
+          name: ingredient,
           affiliateLink: match?.product.link ?? null,
           affiliateMatchType: match?.matchType ?? null,
         };

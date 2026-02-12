@@ -9,17 +9,6 @@ export const AFFILIATES_CSV_PATH = path.join(DATA_DIR, 'affiliates.csv');
 export const TAGS_CSV_PATH = path.join(DATA_DIR, 'tags.csv');
 
 // ── CSV row types (denormalized) ──
-export interface IngredientJson {
-  name: string;
-  isMain: boolean;
-  position: number;
-}
-
-export interface StepJson {
-  description: string;
-  position: number;
-}
-
 export interface ImageJson {
   url: string;
   position: number;

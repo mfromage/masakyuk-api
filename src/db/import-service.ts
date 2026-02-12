@@ -1,15 +1,7 @@
 import { sql } from 'drizzle-orm';
 import Papa from 'papaparse';
 import type { Database } from './connection.js';
-import {
-  recipes,
-  recipeIngredients,
-  recipeSteps,
-  recipeImages,
-  tags,
-  recipeTags,
-  affiliateProducts,
-} from './schema/index.js';
+import { recipes, recipeImages, tags, recipeTags, affiliateProducts } from './schema/index.js';
 import {
   validateTagRows,
   validateRecipeRows,
@@ -17,8 +9,6 @@ import {
   type TagCsvRow,
   type RecipeCsvRow,
   type AffiliateCsvRow,
-  type IngredientJson,
-  type StepJson,
   type ImageJson,
   type ValidationError,
 } from './csv-helpers.js';
@@ -130,41 +120,18 @@ export async function importRecipesCsv(db: Database, csvContent: string): Promis
             : null,
           source: r.source?.trim() || null,
           allergies: r.allergies?.trim() || null,
+          ingredients: r.ingredients?.trim() ? (JSON.parse(r.ingredients) as string[]) : [],
+          steps: r.steps?.trim() ? (JSON.parse(r.steps) as string[]) : [],
         })),
       )
       .returning({ id: recipes.id });
 
-    const allIngredientValues: (typeof recipeIngredients.$inferInsert)[] = [];
-    const allStepValues: (typeof recipeSteps.$inferInsert)[] = [];
     const allImageValues: (typeof recipeImages.$inferInsert)[] = [];
     const allRecipeTagValues: (typeof recipeTags.$inferInsert)[] = [];
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
       const recipeId = insertedRecipes[i].id;
-
-      if (row.ingredients?.trim()) {
-        const items: IngredientJson[] = JSON.parse(row.ingredients);
-        for (const item of items) {
-          allIngredientValues.push({
-            recipeId,
-            name: item.name,
-            isMain: item.isMain,
-            position: item.position,
-          });
-        }
-      }
-
-      if (row.steps?.trim()) {
-        const items: StepJson[] = JSON.parse(row.steps);
-        for (const item of items) {
-          allStepValues.push({
-            recipeId,
-            description: item.description,
-            position: item.position,
-          });
-        }
-      }
 
       if (row.images?.trim()) {
         const items: ImageJson[] = JSON.parse(row.images);
@@ -188,12 +155,6 @@ export async function importRecipesCsv(db: Database, csvContent: string): Promis
       }
     }
 
-    if (allIngredientValues.length > 0) {
-      await tx.insert(recipeIngredients).values(allIngredientValues);
-    }
-    if (allStepValues.length > 0) {
-      await tx.insert(recipeSteps).values(allStepValues);
-    }
     if (allImageValues.length > 0) {
       await tx.insert(recipeImages).values(allImageValues);
     }

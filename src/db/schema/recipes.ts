@@ -1,14 +1,5 @@
 import { relations } from 'drizzle-orm';
-import {
-  pgTable,
-  serial,
-  text,
-  integer,
-  timestamp,
-  boolean,
-  index,
-  primaryKey,
-} from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, index, primaryKey } from 'drizzle-orm/pg-core';
 
 export const recipes = pgTable('recipes', {
   id: serial('id').primaryKey(),
@@ -17,36 +8,11 @@ export const recipes = pgTable('recipes', {
   cookingTimeMinutes: integer('cooking_time_minutes'),
   source: text('source'),
   allergies: text('allergies'),
+  ingredients: text('ingredients').array().notNull().default([]),
+  steps: text('steps').array().notNull().default([]),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
-
-export const recipeIngredients = pgTable(
-  'recipe_ingredients',
-  {
-    id: serial('id').primaryKey(),
-    recipeId: integer('recipe_id')
-      .notNull()
-      .references(() => recipes.id, { onDelete: 'cascade' }),
-    name: text('name').notNull(),
-    isMain: boolean('is_main').default(false).notNull(),
-    position: integer('position').default(0).notNull(),
-  },
-  (table) => [index('recipe_ingredients_recipe_id_idx').on(table.recipeId)],
-);
-
-export const recipeSteps = pgTable(
-  'recipe_steps',
-  {
-    id: serial('id').primaryKey(),
-    recipeId: integer('recipe_id')
-      .notNull()
-      .references(() => recipes.id, { onDelete: 'cascade' }),
-    description: text('description').notNull(),
-    position: integer('position').default(0).notNull(),
-  },
-  (table) => [index('recipe_steps_recipe_id_idx').on(table.recipeId)],
-);
 
 export const recipeImages = pgTable(
   'recipe_images',
@@ -84,24 +50,8 @@ export const recipeTags = pgTable(
 
 // Relations
 export const recipesRelations = relations(recipes, ({ many }) => ({
-  ingredients: many(recipeIngredients),
-  steps: many(recipeSteps),
   images: many(recipeImages),
   recipeTags: many(recipeTags),
-}));
-
-export const recipeIngredientsRelations = relations(recipeIngredients, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [recipeIngredients.recipeId],
-    references: [recipes.id],
-  }),
-}));
-
-export const recipeStepsRelations = relations(recipeSteps, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [recipeSteps.recipeId],
-    references: [recipes.id],
-  }),
 }));
 
 export const recipeImagesRelations = relations(recipeImages, ({ one }) => ({

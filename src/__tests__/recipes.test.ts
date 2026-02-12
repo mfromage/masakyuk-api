@@ -11,21 +11,14 @@ const sampleRecipe: RecipeRow = {
   cookingTimeMinutes: 30,
   source: 'Grandma',
   allergies: 'soy',
+  ingredients: ['nasi', 'minyak goreng', 'bawang putih'],
+  steps: ['Heat oil in a wok', 'Add garlic and fry'],
   createdAt: now,
   updatedAt: now,
 };
 
 const sampleRecipeWithRelations: RecipeWithRelations = {
   ...sampleRecipe,
-  ingredients: [
-    { id: 1, name: 'nasi', isMain: true, position: 0 },
-    { id: 2, name: 'minyak goreng', isMain: false, position: 1 },
-    { id: 3, name: 'bawang putih', isMain: false, position: 2 },
-  ],
-  steps: [
-    { id: 1, description: 'Heat oil in a wok', position: 0 },
-    { id: 2, description: 'Add garlic and fry', position: 1 },
-  ],
   images: [{ id: 1, url: 'https://example.com/nasi-goreng.jpg', position: 0 }],
   tags: [
     { id: 1, key: 'indonesian', type: 'cuisine', labelEn: 'Indonesian', labelId: 'Indonesia' },
@@ -72,8 +65,8 @@ describe('GET /recipes/all', () => {
     const body = response.json();
     expect(body).toHaveLength(1);
     expect(body[0].name).toBe('Nasi Goreng');
-    expect(body[0].ingredients).toHaveLength(3);
-    expect(body[0].steps).toHaveLength(2);
+    expect(body[0].ingredients).toEqual(['nasi', 'minyak goreng', 'bawang putih']);
+    expect(body[0].steps).toEqual(['Heat oil in a wok', 'Add garlic and fry']);
     expect(body[0].images).toHaveLength(1);
     expect(body[0].tags).toHaveLength(1);
   });
@@ -101,8 +94,8 @@ describe('GET /recipes/:id', () => {
     expect(response.statusCode).toBe(200);
     const body = response.json();
     expect(body.name).toBe('Nasi Goreng');
-    expect(body.ingredients).toHaveLength(3);
-    expect(body.steps).toHaveLength(2);
+    expect(body.ingredients).toEqual(['nasi', 'minyak goreng', 'bawang putih']);
+    expect(body.steps).toEqual(['Heat oil in a wok', 'Add garlic and fry']);
     expect(body.images).toHaveLength(1);
     expect(body.tags).toHaveLength(1);
   });

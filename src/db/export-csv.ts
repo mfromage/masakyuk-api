@@ -5,22 +5,12 @@ import fs from 'node:fs';
 import { eq, inArray } from 'drizzle-orm';
 import Papa from 'papaparse';
 import { createDb } from './connection.js';
-import {
-  recipes,
-  recipeIngredients,
-  recipeSteps,
-  recipeImages,
-  recipeTags,
-  tags,
-  affiliateProducts,
-} from './schema/index.js';
+import { recipes, recipeImages, recipeTags, tags, affiliateProducts } from './schema/index.js';
 import {
   DATA_DIR,
   RECIPES_CSV_PATH,
   AFFILIATES_CSV_PATH,
   TAGS_CSV_PATH,
-  type IngredientJson,
-  type StepJson,
   type ImageJson,
 } from './csv-helpers.js';
 
@@ -53,17 +43,7 @@ async function exportCsv() {
   if (allRecipes.length > 0) {
     const recipeIds = allRecipes.map((r) => r.id);
 
-    const [allIngredients, allSteps, allImages, allTagRows] = await Promise.all([
-      db
-        .select()
-        .from(recipeIngredients)
-        .where(inArray(recipeIngredients.recipeId, recipeIds))
-        .orderBy(recipeIngredients.recipeId, recipeIngredients.position),
-      db
-        .select()
-        .from(recipeSteps)
-        .where(inArray(recipeSteps.recipeId, recipeIds))
-        .orderBy(recipeSteps.recipeId, recipeSteps.position),
+    const [allImages, allTagRows] = await Promise.all([
       db
         .select()
         .from(recipeImages)
@@ -79,21 +59,10 @@ async function exportCsv() {
         .where(inArray(recipeTags.recipeId, recipeIds)),
     ]);
 
-    const ingredientsByRecipe = Map.groupBy(allIngredients, (i) => i.recipeId);
-    const stepsByRecipe = Map.groupBy(allSteps, (s) => s.recipeId);
     const imagesByRecipe = Map.groupBy(allImages, (img) => img.recipeId);
     const tagsByRecipe = Map.groupBy(allTagRows, (t) => t.recipeId);
 
     const recipeRows = allRecipes.map((r) => {
-      const ingredients: IngredientJson[] = (ingredientsByRecipe.get(r.id) ?? []).map((i) => ({
-        name: i.name,
-        isMain: i.isMain,
-        position: i.position,
-      }));
-      const steps: StepJson[] = (stepsByRecipe.get(r.id) ?? []).map((s) => ({
-        description: s.description,
-        position: s.position,
-      }));
       const images: ImageJson[] = (imagesByRecipe.get(r.id) ?? []).map((img) => ({
         url: img.url,
         position: img.position,
@@ -109,8 +78,8 @@ async function exportCsv() {
         cooking_time_minutes: r.cookingTimeMinutes?.toString() ?? '',
         source: r.source ?? '',
         allergies: r.allergies ?? '',
-        ingredients: JSON.stringify(ingredients),
-        steps: JSON.stringify(steps),
+        ingredients: JSON.stringify(r.ingredients),
+        steps: JSON.stringify(r.steps),
         images: JSON.stringify(images),
         tags: tagKeys,
       };

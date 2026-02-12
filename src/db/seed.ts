@@ -1,15 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: ['.env.local', '.env'] });
 import { createDb } from './connection.js';
-import {
-  recipes,
-  recipeIngredients,
-  recipeSteps,
-  recipeImages,
-  tags,
-  recipeTags,
-  affiliateProducts,
-} from './schema/index.js';
+import { recipes, recipeImages, tags, recipeTags, affiliateProducts } from './schema/index.js';
 
 const db = createDb(process.env.DATABASE_URL!);
 
@@ -63,6 +55,22 @@ async function seed() {
       cookingTimeMinutes: 20,
       source: 'Traditional',
       allergies: 'soy, egg',
+      ingredients: [
+        'nasi putih',
+        'minyak goreng',
+        'bawang putih',
+        'bawang merah',
+        'kecap manis',
+        'telur',
+        'garam',
+      ],
+      steps: [
+        'Panaskan minyak goreng di wajan',
+        'Tumis bawang putih dan bawang merah hingga harum',
+        'Masukkan nasi putih, aduk rata',
+        'Tambahkan kecap manis dan garam, aduk hingga merata',
+        'Goreng telur di samping, sajikan di atas nasi',
+      ],
     },
     {
       name: 'Soto Ayam',
@@ -70,6 +78,14 @@ async function seed() {
       cookingTimeMinutes: 45,
       source: 'Traditional',
       allergies: null,
+      ingredients: ['ayam', 'kunyit', 'serai', 'soun', 'bawang putih', 'daun jeruk'],
+      steps: [
+        'Rebus ayam dengan air, kunyit, serai, dan daun jeruk',
+        'Angkat ayam, suwir-suwir dagingnya',
+        'Saring kaldu, masukkan kembali ayam suwir',
+        'Rebus soun hingga lunak, tiriskan',
+        'Sajikan kaldu dengan soun dan ayam suwir',
+      ],
     },
     {
       name: 'Gado-gado',
@@ -77,6 +93,13 @@ async function seed() {
       cookingTimeMinutes: 30,
       source: 'Traditional',
       allergies: 'peanut',
+      ingredients: ['kacang tanah', 'tahu', 'tempe', 'kangkung', 'tauge', 'kentang'],
+      steps: [
+        'Goreng kacang tanah, haluskan untuk bumbu',
+        'Rebus kangkung, tauge, dan kentang',
+        'Goreng tahu dan tempe hingga kecokelatan',
+        'Siram sayuran dengan bumbu kacang',
+      ],
     },
   ];
 
@@ -88,113 +111,6 @@ async function seed() {
   console.log(`  Inserted ${insertedRecipes.length} recipes`);
 
   if (insertedRecipes.length > 0) {
-    // ── Ingredients ──
-    const ingredientData = [
-      // Nasi Goreng
-      { recipeId: insertedRecipes[0].id, name: 'nasi putih', isMain: true, position: 0 },
-      { recipeId: insertedRecipes[0].id, name: 'minyak goreng', isMain: false, position: 1 },
-      { recipeId: insertedRecipes[0].id, name: 'bawang putih', isMain: false, position: 2 },
-      { recipeId: insertedRecipes[0].id, name: 'bawang merah', isMain: false, position: 3 },
-      { recipeId: insertedRecipes[0].id, name: 'kecap manis', isMain: false, position: 4 },
-      { recipeId: insertedRecipes[0].id, name: 'telur', isMain: false, position: 5 },
-      { recipeId: insertedRecipes[0].id, name: 'garam', isMain: false, position: 6 },
-      // Soto Ayam
-      { recipeId: insertedRecipes[1].id, name: 'ayam', isMain: true, position: 0 },
-      { recipeId: insertedRecipes[1].id, name: 'kunyit', isMain: false, position: 1 },
-      { recipeId: insertedRecipes[1].id, name: 'serai', isMain: false, position: 2 },
-      { recipeId: insertedRecipes[1].id, name: 'soun', isMain: false, position: 3 },
-      { recipeId: insertedRecipes[1].id, name: 'bawang putih', isMain: false, position: 4 },
-      { recipeId: insertedRecipes[1].id, name: 'daun jeruk', isMain: false, position: 5 },
-      // Gado-gado
-      { recipeId: insertedRecipes[2].id, name: 'kacang tanah', isMain: true, position: 0 },
-      { recipeId: insertedRecipes[2].id, name: 'tahu', isMain: false, position: 1 },
-      { recipeId: insertedRecipes[2].id, name: 'tempe', isMain: false, position: 2 },
-      { recipeId: insertedRecipes[2].id, name: 'kangkung', isMain: false, position: 3 },
-      { recipeId: insertedRecipes[2].id, name: 'tauge', isMain: false, position: 4 },
-      { recipeId: insertedRecipes[2].id, name: 'kentang', isMain: false, position: 5 },
-    ];
-    await db.insert(recipeIngredients).values(ingredientData).onConflictDoNothing();
-    console.log(`  Inserted ${ingredientData.length} ingredients`);
-
-    // ── Steps ──
-    const stepData = [
-      // Nasi Goreng
-      {
-        recipeId: insertedRecipes[0].id,
-        description: 'Panaskan minyak goreng di wajan',
-        position: 0,
-      },
-      {
-        recipeId: insertedRecipes[0].id,
-        description: 'Tumis bawang putih dan bawang merah hingga harum',
-        position: 1,
-      },
-      {
-        recipeId: insertedRecipes[0].id,
-        description: 'Masukkan nasi putih, aduk rata',
-        position: 2,
-      },
-      {
-        recipeId: insertedRecipes[0].id,
-        description: 'Tambahkan kecap manis dan garam, aduk hingga merata',
-        position: 3,
-      },
-      {
-        recipeId: insertedRecipes[0].id,
-        description: 'Goreng telur di samping, sajikan di atas nasi',
-        position: 4,
-      },
-      // Soto Ayam
-      {
-        recipeId: insertedRecipes[1].id,
-        description: 'Rebus ayam dengan air, kunyit, serai, dan daun jeruk',
-        position: 0,
-      },
-      {
-        recipeId: insertedRecipes[1].id,
-        description: 'Angkat ayam, suwir-suwir dagingnya',
-        position: 1,
-      },
-      {
-        recipeId: insertedRecipes[1].id,
-        description: 'Saring kaldu, masukkan kembali ayam suwir',
-        position: 2,
-      },
-      {
-        recipeId: insertedRecipes[1].id,
-        description: 'Rebus soun hingga lunak, tiriskan',
-        position: 3,
-      },
-      {
-        recipeId: insertedRecipes[1].id,
-        description: 'Sajikan kaldu dengan soun dan ayam suwir',
-        position: 4,
-      },
-      // Gado-gado
-      {
-        recipeId: insertedRecipes[2].id,
-        description: 'Goreng kacang tanah, haluskan untuk bumbu',
-        position: 0,
-      },
-      {
-        recipeId: insertedRecipes[2].id,
-        description: 'Rebus kangkung, tauge, dan kentang',
-        position: 1,
-      },
-      {
-        recipeId: insertedRecipes[2].id,
-        description: 'Goreng tahu dan tempe hingga kecokelatan',
-        position: 2,
-      },
-      {
-        recipeId: insertedRecipes[2].id,
-        description: 'Siram sayuran dengan bumbu kacang',
-        position: 3,
-      },
-    ];
-    await db.insert(recipeSteps).values(stepData).onConflictDoNothing();
-    console.log(`  Inserted ${stepData.length} steps`);
-
     // ── Images ──
     const imageData = [
       {
