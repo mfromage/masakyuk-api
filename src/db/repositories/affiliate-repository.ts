@@ -24,17 +24,13 @@ export interface CatalogProduct {
   link: string;
   aliases: string[] | null;
   partner: string;
-}
-
-export interface AffiliateCatalog {
-  products: CatalogProduct[];
   searchUrlTemplate: string | null;
 }
 
 export interface AffiliateRepository {
   findAll(): Promise<AffiliateRow[]>;
   findById(id: number): Promise<AffiliateRow | undefined>;
-  findCatalog(): Promise<AffiliateCatalog>;
+  findCatalog(): Promise<CatalogProduct[]>;
   matchIngredient(name: string): Promise<AffiliateMatch | undefined>;
 }
 
@@ -44,20 +40,18 @@ export function createAffiliateRepository(db: Database): AffiliateRepository {
       return db.select().from(affiliateProducts);
     },
 
-    async findCatalog(): Promise<AffiliateCatalog> {
+    async findCatalog(): Promise<CatalogProduct[]> {
       const rows = await db
         .select()
         .from(affiliateProducts)
         .orderBy(affiliateProducts.canonicalName);
-      return {
-        products: rows.map((r) => ({
-          ingredient: r.canonicalName,
-          link: r.link,
-          aliases: r.aliases,
-          partner: r.partner,
-        })),
-        searchUrlTemplate: rows[0]?.searchUrlTemplate ?? null,
-      };
+      return rows.map((r) => ({
+        ingredient: r.canonicalName,
+        link: r.link,
+        aliases: r.aliases,
+        partner: r.partner,
+        searchUrlTemplate: r.searchUrlTemplate,
+      }));
     },
 
     async findById(id: number) {
