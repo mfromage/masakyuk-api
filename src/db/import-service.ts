@@ -145,7 +145,7 @@ export async function importRecipesCsv(db: Database, csvContent: string): Promis
       }
 
       if (row.tags?.trim()) {
-        const keys = row.tags.split(',').map((k) => k.trim());
+        const keys = [...new Set(row.tags.split(',').map((k) => k.trim()))];
         for (const key of keys) {
           allRecipeTagValues.push({
             recipeId,
