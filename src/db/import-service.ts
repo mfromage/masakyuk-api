@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import Papa from 'papaparse';
 import type { Database } from './connection.js';
 import { recipes, recipeImages, tags, recipeTags, affiliateProducts } from './schema/index.js';
+import type { Ingredient } from './schema/recipes.js';
 import {
   validateTagRows,
   validateRecipeRows,
@@ -120,7 +121,7 @@ export async function importRecipesCsv(db: Database, csvContent: string): Promis
             : null,
           source: r.source?.trim() || null,
           allergies: r.allergies?.trim() || null,
-          ingredients: r.ingredients?.trim() ? (JSON.parse(r.ingredients) as string[]) : [],
+          ingredients: r.ingredients?.trim() ? (JSON.parse(r.ingredients) as Ingredient[]) : [],
           steps: r.steps?.trim() ? (JSON.parse(r.steps) as string[]) : [],
         })),
       )

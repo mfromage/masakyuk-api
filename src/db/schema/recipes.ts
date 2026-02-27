@@ -1,5 +1,20 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, serial, text, integer, timestamp, index, primaryKey } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  timestamp,
+  index,
+  primaryKey,
+  jsonb,
+} from 'drizzle-orm/pg-core';
+
+export interface Ingredient {
+  name: string;
+  amount: number;
+  unit: string;
+}
 
 export const recipes = pgTable('recipes', {
   id: serial('id').primaryKey(),
@@ -8,7 +23,7 @@ export const recipes = pgTable('recipes', {
   cookingTimeMinutes: integer('cooking_time_minutes'),
   source: text('source'),
   allergies: text('allergies'),
-  ingredients: text('ingredients').array().notNull().default([]),
+  ingredients: jsonb('ingredients').$type<Ingredient[]>().notNull().default([]),
   steps: text('steps').array().notNull().default([]),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),

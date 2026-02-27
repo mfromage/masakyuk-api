@@ -1,8 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { buildTestApp } from './helpers/setup.js';
 import type { RecipeRow, RecipeWithRelations } from '../db/repositories/recipe-repository.js';
+import type { Ingredient } from '../db/schema/recipes.js';
 
 const now = new Date();
+
+const sampleIngredients: Ingredient[] = [
+  { name: 'nasi', amount: 200, unit: 'gram' },
+  { name: 'minyak goreng', amount: 2, unit: 'sdm' },
+  { name: 'bawang putih', amount: 3, unit: 'siung' },
+];
 
 const sampleRecipe: RecipeRow = {
   id: 1,
@@ -11,7 +18,7 @@ const sampleRecipe: RecipeRow = {
   cookingTimeMinutes: 30,
   source: 'Grandma',
   allergies: 'soy',
-  ingredients: ['nasi', 'minyak goreng', 'bawang putih'],
+  ingredients: sampleIngredients,
   steps: ['Heat oil in a wok', 'Add garlic and fry'],
   createdAt: now,
   updatedAt: now,
@@ -65,7 +72,7 @@ describe('GET /recipes/all', () => {
     const body = response.json();
     expect(body).toHaveLength(1);
     expect(body[0].name).toBe('Nasi Goreng');
-    expect(body[0].ingredients).toEqual(['nasi', 'minyak goreng', 'bawang putih']);
+    expect(body[0].ingredients).toEqual(sampleIngredients);
     expect(body[0].steps).toEqual(['Heat oil in a wok', 'Add garlic and fry']);
     expect(body[0].images).toHaveLength(1);
     expect(body[0].tags).toHaveLength(1);
@@ -94,7 +101,7 @@ describe('GET /recipes/:id', () => {
     expect(response.statusCode).toBe(200);
     const body = response.json();
     expect(body.name).toBe('Nasi Goreng');
-    expect(body.ingredients).toEqual(['nasi', 'minyak goreng', 'bawang putih']);
+    expect(body.ingredients).toEqual(sampleIngredients);
     expect(body.steps).toEqual(['Heat oil in a wok', 'Add garlic and fry']);
     expect(body.images).toHaveLength(1);
     expect(body.tags).toHaveLength(1);
@@ -154,10 +161,14 @@ describe('GET /recipes/:id/with-affiliates', () => {
     const minyak = body.ingredients.find((i: { name: string }) => i.name === 'minyak goreng');
     expect(minyak.affiliateLink).toBe('https://affiliate.example.com/minyak-goreng');
     expect(minyak.affiliateMatchType).toBe('exact');
+    expect(minyak.amount).toBe(2);
+    expect(minyak.unit).toBe('sdm');
 
     const nasi = body.ingredients.find((i: { name: string }) => i.name === 'nasi');
     expect(nasi.affiliateLink).toBeNull();
     expect(nasi.affiliateMatchType).toBeNull();
+    expect(nasi.amount).toBe(200);
+    expect(nasi.unit).toBe('gram');
   });
 
   it('returns 404 for non-existent recipe', async () => {

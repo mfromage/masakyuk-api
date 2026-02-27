@@ -8,7 +8,7 @@ import type {
   AffiliateRepository,
   AffiliateRow,
   AffiliateMatch,
-  AffiliateCatalog,
+  CatalogProduct,
 } from '../../db/repositories/affiliate-repository.js';
 import type { Database } from '../../db/connection.js';
 
@@ -28,7 +28,7 @@ export function createMockAffiliateRepo(
   return {
     findAll: async (): Promise<AffiliateRow[]> => [],
     findById: async (): Promise<AffiliateRow | undefined> => undefined,
-    findCatalog: async (): Promise<AffiliateCatalog> => ({ products: [], searchUrlTemplate: null }),
+    findCatalog: async (): Promise<CatalogProduct[]> => [],
     matchIngredient: async (): Promise<AffiliateMatch | undefined> => undefined,
     ...overrides,
   };

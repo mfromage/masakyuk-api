@@ -81,7 +81,7 @@ export function validateRecipeRows(rows: RecipeCsvRow[]): ValidationError[] {
     }
 
     // Validate JSON columns
-    for (const field of ['ingredients', 'steps', 'images'] as const) {
+    for (const field of ['steps', 'images'] as const) {
       if (row[field]?.trim()) {
         try {
           const parsed = JSON.parse(row[field]);
@@ -91,6 +91,51 @@ export function validateRecipeRows(rows: RecipeCsvRow[]): ValidationError[] {
         } catch {
           errors.push({ row: rowNum, field, message: 'invalid JSON' });
         }
+      }
+    }
+
+    // Validate ingredients as Ingredient[] objects
+    if (row.ingredients?.trim()) {
+      try {
+        const parsed = JSON.parse(row.ingredients);
+        if (!Array.isArray(parsed)) {
+          errors.push({ row: rowNum, field: 'ingredients', message: 'must be a JSON array' });
+        } else {
+          for (let j = 0; j < parsed.length; j++) {
+            const item = parsed[j];
+            if (typeof item !== 'object' || item === null) {
+              errors.push({
+                row: rowNum,
+                field: 'ingredients',
+                message: `item ${j}: must be an object`,
+              });
+              continue;
+            }
+            if (typeof item.name !== 'string' || !item.name.trim()) {
+              errors.push({
+                row: rowNum,
+                field: 'ingredients',
+                message: `item ${j}: name is required`,
+              });
+            }
+            if (typeof item.amount !== 'number' || item.amount < 0) {
+              errors.push({
+                row: rowNum,
+                field: 'ingredients',
+                message: `item ${j}: amount must be a non-negative number`,
+              });
+            }
+            if (typeof item.unit !== 'string') {
+              errors.push({
+                row: rowNum,
+                field: 'ingredients',
+                message: `item ${j}: unit must be a string`,
+              });
+            }
+          }
+        }
+      } catch {
+        errors.push({ row: rowNum, field: 'ingredients', message: 'invalid JSON' });
       }
     }
   }

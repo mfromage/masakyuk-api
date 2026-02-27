@@ -1,6 +1,7 @@
 import { eq, inArray } from 'drizzle-orm';
 import type { Database } from '../connection.js';
 import { recipes, recipeImages, recipeTags, tags } from '../schema/index.js';
+import type { Ingredient } from '../schema/recipes.js';
 
 export interface RecipeRow {
   id: number;
@@ -9,7 +10,7 @@ export interface RecipeRow {
   cookingTimeMinutes: number | null;
   source: string | null;
   allergies: string | null;
-  ingredients: string[];
+  ingredients: Ingredient[];
   steps: string[];
   createdAt: Date;
   updatedAt: Date;

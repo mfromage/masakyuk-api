@@ -16,7 +16,7 @@ function makeRecipeRow(overrides: Partial<RecipeCsvRow> = {}): RecipeCsvRow {
     cooking_time_minutes: '20',
     source: 'Traditional',
     allergies: '',
-    ingredients: JSON.stringify(['rice']),
+    ingredients: JSON.stringify([{ name: 'rice', amount: 200, unit: 'gram' }]),
     steps: JSON.stringify(['Cook rice']),
     images: JSON.stringify([{ url: 'https://example.com/img.jpg', position: 0 }]),
     tags: 'indonesian,easy',
@@ -103,6 +103,50 @@ describe('validateRecipeRows', () => {
     const errors = validateRecipeRows([makeRecipeRow({ images: 'bad' })]);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatchObject({ field: 'images', message: 'invalid JSON' });
+  });
+
+  it('detects non-array JSON in ingredients', () => {
+    const errors = validateRecipeRows([makeRecipeRow({ ingredients: '{}' })]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({ field: 'ingredients', message: 'must be a JSON array' });
+  });
+
+  it('detects non-object ingredient item', () => {
+    const errors = validateRecipeRows([
+      makeRecipeRow({ ingredients: JSON.stringify(['just a string']) }),
+    ]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({ field: 'ingredients', message: 'item 0: must be an object' });
+  });
+
+  it('detects missing ingredient name', () => {
+    const errors = validateRecipeRows([
+      makeRecipeRow({ ingredients: JSON.stringify([{ name: '', amount: 1, unit: 'gram' }]) }),
+    ]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({ field: 'ingredients', message: 'item 0: name is required' });
+  });
+
+  it('detects negative ingredient amount', () => {
+    const errors = validateRecipeRows([
+      makeRecipeRow({ ingredients: JSON.stringify([{ name: 'rice', amount: -1, unit: 'gram' }]) }),
+    ]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({
+      field: 'ingredients',
+      message: 'item 0: amount must be a non-negative number',
+    });
+  });
+
+  it('detects non-string ingredient unit', () => {
+    const errors = validateRecipeRows([
+      makeRecipeRow({ ingredients: JSON.stringify([{ name: 'rice', amount: 100, unit: 42 }]) }),
+    ]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({
+      field: 'ingredients',
+      message: 'item 0: unit must be a string',
+    });
   });
 
   it('allows empty JSON columns', () => {
