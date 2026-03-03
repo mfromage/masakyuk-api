@@ -170,11 +170,6 @@ export default function HomePage() {
         <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 py-16 md:flex-row md:gap-16 md:py-24">
           {/* Text */}
           <div className="flex-1">
-            {/* Badge */}
-            <span className="mb-6 inline-block rounded-full bg-accent-light px-4 py-1.5 text-sm font-medium text-accent">
-              10.000+ orang udah gak pusing masak apa lagi
-            </span>
-
             <h1 className="text-4xl font-bold leading-tight text-neutral-900 md:text-5xl lg:text-6xl">
               Gak perlu pusing lagi mikirin mau masak apa.
             </h1>
