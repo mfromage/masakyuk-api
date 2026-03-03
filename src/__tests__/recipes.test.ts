@@ -32,7 +32,7 @@ const sampleRecipeWithRelations: RecipeWithRelations = {
   ],
 };
 
-describe('GET /recipes', () => {
+describe('GET /api/recipes', () => {
   it('returns a list of recipes', async () => {
     const app = await buildTestApp({
       recipeRepo: {
@@ -40,7 +40,7 @@ describe('GET /recipes', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/recipes' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -51,14 +51,14 @@ describe('GET /recipes', () => {
   it('returns empty array when no recipes', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/recipes' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes' });
 
     expect(response.statusCode).toBe(200);
     expect(response.json()).toEqual([]);
   });
 });
 
-describe('GET /recipes/all', () => {
+describe('GET /api/recipes/all', () => {
   it('returns all recipes with full relations', async () => {
     const app = await buildTestApp({
       recipeRepo: {
@@ -66,7 +66,7 @@ describe('GET /recipes/all', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/all' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/all' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -81,14 +81,14 @@ describe('GET /recipes/all', () => {
   it('returns empty array when no recipes', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/all' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/all' });
 
     expect(response.statusCode).toBe(200);
     expect(response.json()).toEqual([]);
   });
 });
 
-describe('GET /recipes/:id', () => {
+describe('GET /api/recipes/:id', () => {
   it('returns recipe with relations', async () => {
     const app = await buildTestApp({
       recipeRepo: {
@@ -96,7 +96,7 @@ describe('GET /recipes/:id', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/1' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/1' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -110,7 +110,7 @@ describe('GET /recipes/:id', () => {
   it('returns 404 for non-existent recipe', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/99999' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/99999' });
 
     expect(response.statusCode).toBe(404);
     expect(response.json().error).toBe('Recipe not found');
@@ -119,13 +119,13 @@ describe('GET /recipes/:id', () => {
   it('returns 400 for invalid id', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/abc' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/abc' });
 
     expect(response.statusCode).toBe(400);
   });
 });
 
-describe('GET /recipes/:id/with-affiliates', () => {
+describe('GET /api/recipes/:id/with-affiliates', () => {
   it('returns recipe with affiliate-enriched ingredients', async () => {
     const app = await buildTestApp({
       recipeRepo: {
@@ -152,7 +152,7 @@ describe('GET /recipes/:id/with-affiliates', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/1/with-affiliates' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/1/with-affiliates' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -174,7 +174,7 @@ describe('GET /recipes/:id/with-affiliates', () => {
   it('returns 404 for non-existent recipe', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/recipes/99999/with-affiliates' });
+    const response = await app.inject({ method: 'GET', url: '/api/recipes/99999/with-affiliates' });
 
     expect(response.statusCode).toBe(404);
   });

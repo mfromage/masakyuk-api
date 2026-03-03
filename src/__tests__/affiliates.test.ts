@@ -16,7 +16,7 @@ const sampleProduct: AffiliateRow = {
   updatedAt: now,
 };
 
-describe('GET /affiliates', () => {
+describe('GET /api/affiliates', () => {
   it('returns affiliate catalog with products and searchUrlTemplate', async () => {
     const app = await buildTestApp({
       affiliateRepo: {
@@ -34,7 +34,7 @@ describe('GET /affiliates', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/affiliates' });
+    const response = await app.inject({ method: 'GET', url: '/api/affiliates' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -51,7 +51,7 @@ describe('GET /affiliates', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/affiliates' });
+    const response = await app.inject({ method: 'GET', url: '/api/affiliates' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -60,7 +60,7 @@ describe('GET /affiliates', () => {
   });
 });
 
-describe('GET /affiliates/:id', () => {
+describe('GET /api/affiliates/:id', () => {
   it('returns affiliate product by id', async () => {
     const app = await buildTestApp({
       affiliateRepo: {
@@ -68,7 +68,7 @@ describe('GET /affiliates/:id', () => {
       },
     });
 
-    const response = await app.inject({ method: 'GET', url: '/affiliates/1' });
+    const response = await app.inject({ method: 'GET', url: '/api/affiliates/1' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -79,7 +79,7 @@ describe('GET /affiliates/:id', () => {
   it('returns 404 for non-existent affiliate', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/affiliates/99999' });
+    const response = await app.inject({ method: 'GET', url: '/api/affiliates/99999' });
 
     expect(response.statusCode).toBe(404);
     expect(response.json().error).toBe('Affiliate product not found');
@@ -88,13 +88,13 @@ describe('GET /affiliates/:id', () => {
   it('returns 400 for invalid id', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/affiliates/abc' });
+    const response = await app.inject({ method: 'GET', url: '/api/affiliates/abc' });
 
     expect(response.statusCode).toBe(400);
   });
 });
 
-describe('GET /affiliates/match', () => {
+describe('GET /api/affiliates/match', () => {
   it('returns exact match', async () => {
     const app = await buildTestApp({
       affiliateRepo: {
@@ -105,7 +105,7 @@ describe('GET /affiliates/match', () => {
 
     const response = await app.inject({
       method: 'GET',
-      url: '/affiliates/match?ingredient=minyak goreng',
+      url: '/api/affiliates/match?ingredient=minyak goreng',
     });
 
     expect(response.statusCode).toBe(200);
@@ -134,7 +134,7 @@ describe('GET /affiliates/match', () => {
 
     const response = await app.inject({
       method: 'GET',
-      url: '/affiliates/match?ingredient=garlic',
+      url: '/api/affiliates/match?ingredient=garlic',
     });
 
     expect(response.statusCode).toBe(200);
@@ -156,7 +156,7 @@ describe('GET /affiliates/match', () => {
 
     const response = await app.inject({
       method: 'GET',
-      url: '/affiliates/match?ingredient=mnyak',
+      url: '/api/affiliates/match?ingredient=mnyak',
     });
 
     expect(response.statusCode).toBe(200);
@@ -166,7 +166,7 @@ describe('GET /affiliates/match', () => {
   it('returns 400 when ingredient param is missing', async () => {
     const app = await buildTestApp();
 
-    const response = await app.inject({ method: 'GET', url: '/affiliates/match' });
+    const response = await app.inject({ method: 'GET', url: '/api/affiliates/match' });
 
     expect(response.statusCode).toBe(400);
     expect(response.json().error).toContain('Missing or invalid');
@@ -178,7 +178,7 @@ describe('GET /affiliates/match', () => {
 
     const response = await app.inject({
       method: 'GET',
-      url: `/affiliates/match?ingredient=${longIngredient}`,
+      url: `/api/affiliates/match?ingredient=${longIngredient}`,
     });
 
     expect(response.statusCode).toBe(400);
@@ -189,7 +189,7 @@ describe('GET /affiliates/match', () => {
 
     const response = await app.inject({
       method: 'GET',
-      url: '/affiliates/match?ingredient=nonexistent',
+      url: '/api/affiliates/match?ingredient=nonexistent',
     });
 
     expect(response.statusCode).toBe(404);

@@ -35,14 +35,14 @@ export async function buildApp(opts: BuildAppOptions): Promise<FastifyInstance> 
     );
   });
 
-  app.get('/health', async () => ({
+  app.get('/api/health', async () => ({
     status: 'ok',
     timestamp: new Date().toISOString(),
   }));
 
-  await app.register(tagRoutes, { prefix: '/tags' });
-  await app.register(recipeRoutes, { prefix: '/recipes' });
-  await app.register(affiliateRoutes, { prefix: '/affiliates' });
+  await app.register(tagRoutes, { prefix: '/api/tags' });
+  await app.register(recipeRoutes, { prefix: '/api/recipes' });
+  await app.register(affiliateRoutes, { prefix: '/api/affiliates' });
 
   return app;
 }

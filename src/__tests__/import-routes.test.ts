@@ -54,7 +54,7 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe('POST /tags/import', () => {
+describe('POST /api/tags/import', () => {
   it('returns 200 with imported count on valid CSV', async () => {
     mockImportTags.mockResolvedValue({ imported: 3 });
     const app = await buildTestApp({ db: mockDb });
@@ -63,7 +63,7 @@ describe('POST /tags/import', () => {
       'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang\nkorean,cuisine,Korean,Korea\nquick,time,Quick,Cepat';
     const response = await app.inject({
       method: 'POST',
-      url: '/tags/import',
+      url: '/api/tags/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -82,7 +82,7 @@ describe('POST /tags/import', () => {
     const csv = 'key,type,label_en,label_id\n,cuisine,Japanese,Jepang';
     const response = await app.inject({
       method: 'POST',
-      url: '/tags/import',
+      url: '/api/tags/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -99,7 +99,7 @@ describe('POST /tags/import', () => {
 
     const response = await app.inject({
       method: 'POST',
-      url: '/tags/import',
+      url: '/api/tags/import',
       headers: multipartHeaders(),
       payload: `--${BOUNDARY}--\r\n`,
     });
@@ -115,7 +115,7 @@ describe('POST /tags/import', () => {
     const csv = 'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang';
     const response = await app.inject({
       method: 'POST',
-      url: '/tags/import',
+      url: '/api/tags/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -130,7 +130,7 @@ describe('POST /tags/import', () => {
     const csv = 'key,type,label_en,label_id\njapanese,cuisine,Japanese,Jepang';
     const response = await app.inject({
       method: 'POST',
-      url: '/tags/import',
+      url: '/api/tags/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -140,7 +140,7 @@ describe('POST /tags/import', () => {
   });
 });
 
-describe('POST /recipes/import', () => {
+describe('POST /api/recipes/import', () => {
   it('returns 200 with imported count on valid CSV', async () => {
     mockImportRecipes.mockResolvedValue({ imported: 2 });
     const app = await buildTestApp({ db: mockDb });
@@ -149,7 +149,7 @@ describe('POST /recipes/import', () => {
       'name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags\nNasi Goreng,Fried rice,30,,,,[],[],""\nMie Ayam,Chicken noodles,25,,,,[],[],""';
     const response = await app.inject({
       method: 'POST',
-      url: '/recipes/import',
+      url: '/api/recipes/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -168,7 +168,7 @@ describe('POST /recipes/import', () => {
     const csv = 'name,description\n,desc';
     const response = await app.inject({
       method: 'POST',
-      url: '/recipes/import',
+      url: '/api/recipes/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -189,7 +189,7 @@ describe('POST /recipes/import', () => {
       'name,description,cooking_time_minutes,source,allergies,ingredients,steps,images,tags\nNasi Goreng,,,,,,[],[],nonexistent';
     const response = await app.inject({
       method: 'POST',
-      url: '/recipes/import',
+      url: '/api/recipes/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -207,7 +207,7 @@ describe('POST /recipes/import', () => {
     const csv = 'name,description\nTest,desc';
     const response = await app.inject({
       method: 'POST',
-      url: '/recipes/import',
+      url: '/api/recipes/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -217,7 +217,7 @@ describe('POST /recipes/import', () => {
   });
 });
 
-describe('POST /affiliates/import', () => {
+describe('POST /api/affiliates/import', () => {
   it('returns 200 with imported count on valid CSV', async () => {
     mockImportAffiliates.mockResolvedValue({ imported: 5 });
     const app = await buildTestApp({ db: mockDb });
@@ -226,7 +226,7 @@ describe('POST /affiliates/import', () => {
       'canonical_name,link,category,aliases,partner,search_url_template\nMinyak Goreng,https://example.com,oil,cooking oil|vegetable oil,tokopedia,https://tokopedia.link/search?q=[keyword]';
     const response = await app.inject({
       method: 'POST',
-      url: '/affiliates/import',
+      url: '/api/affiliates/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -248,7 +248,7 @@ describe('POST /affiliates/import', () => {
       'canonical_name,link,category,aliases,partner,search_url_template\n,https://example.com,oil,,tokopedia,';
     const response = await app.inject({
       method: 'POST',
-      url: '/affiliates/import',
+      url: '/api/affiliates/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
@@ -267,7 +267,7 @@ describe('POST /affiliates/import', () => {
       'canonical_name,link,category,aliases,partner,search_url_template\nTest,https://example.com,,,tokopedia,';
     const response = await app.inject({
       method: 'POST',
-      url: '/affiliates/import',
+      url: '/api/affiliates/import',
       headers: multipartHeaders(),
       payload: multipartPayload(csv),
     });
