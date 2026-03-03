@@ -34,7 +34,8 @@ export default function RootLayout({
             >
               Masakyuk
             </Link>
-            <ul className="flex items-center gap-6 text-sm font-medium text-neutral-500">
+            {/* Desktop nav */}
+            <ul className="hidden items-center gap-6 text-sm font-medium text-neutral-500 md:flex">
               <li>
                 <Link
                   href="#fitur"
@@ -68,6 +69,13 @@ export default function RootLayout({
                 </Link>
               </li>
             </ul>
+            {/* Mobile CTA only */}
+            <Link
+              href="#download"
+              className="rounded-full bg-primary-500 px-5 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors md:hidden"
+            >
+              Coba Sekarang
+            </Link>
           </nav>
         </header>
 

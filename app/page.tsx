@@ -57,6 +57,9 @@ function CheckIcon() {
   );
 }
 
+const APP_STORE_URL = process.env.NEXT_PUBLIC_APP_STORE_URL ?? "#";
+const PLAY_STORE_URL = process.env.NEXT_PUBLIC_PLAY_STORE_URL ?? "#";
+
 function AppleStoreButton({ variant = "dark" }: { variant?: "dark" | "outline" }) {
   const base =
     variant === "dark"
@@ -64,7 +67,9 @@ function AppleStoreButton({ variant = "dark" }: { variant?: "dark" | "outline" }
       : "border border-white/30 bg-white/10 text-white";
   return (
     <a
-      href="#"
+      href={APP_STORE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`inline-flex items-center gap-3 rounded-xl px-5 py-3 transition-opacity hover:opacity-90 ${base}`}
     >
       {/* Apple logo */}
@@ -86,7 +91,9 @@ function PlayStoreButton({ variant = "dark" }: { variant?: "dark" | "outline" })
       : "border border-white/30 bg-white/10 text-white";
   return (
     <a
-      href="#"
+      href={PLAY_STORE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`inline-flex items-center gap-3 rounded-xl px-5 py-3 transition-opacity hover:opacity-90 ${base}`}
     >
       {/* Play triangle */}
@@ -194,19 +201,11 @@ export default function HomePage() {
               ))}
             </ul>
 
-            {/* CTA */}
-            <a
-              href="#download"
-              className="mt-10 inline-flex items-center gap-2 rounded-full bg-primary-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary-500/25 transition-colors hover:bg-primary-600"
-            >
+            {/* Download label + Store buttons */}
+            <p className="mt-10 text-sm font-semibold uppercase tracking-wide text-neutral-500">
               Download Gratis
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-
-            {/* Store buttons */}
-            <div className="mt-6 flex flex-wrap gap-3">
+            </p>
+            <div className="mt-3 flex flex-wrap gap-3">
               <AppleStoreButton />
               <PlayStoreButton />
             </div>
@@ -223,7 +222,7 @@ export default function HomePage() {
             <PhoneMockup
               src="/illustrations/home.png"
               alt="Masakyuk home screen"
-              className="max-w-[280px]"
+              className="max-w-[220px] md:max-w-[280px]"
             />
           </div>
         </div>
@@ -236,7 +235,7 @@ export default function HomePage() {
             Ribuan orang udah bilang bye ke drama &lsquo;masak apa ya?&rsquo;
           </h2>
 
-          <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid flex-1 grid-cols-3 gap-3 sm:gap-4">
             {[
               { value: "100+", label: "Resep Siap Masak" },
               { value: "200+", label: "Bahan Terindeks" },
@@ -244,12 +243,12 @@ export default function HomePage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl bg-white p-6 shadow-sm"
+                className="rounded-2xl bg-white p-4 shadow-sm md:p-6"
               >
-                <p className="text-3xl font-bold text-primary-500">
+                <p className="text-2xl font-bold text-primary-500 md:text-3xl">
                   {stat.value}
                 </p>
-                <p className="mt-1 text-sm text-neutral-500">{stat.label}</p>
+                <p className="mt-1 text-xs text-neutral-500 md:text-sm">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -332,7 +331,7 @@ export default function HomePage() {
             Cuma 3 langkah dari &lsquo;bingung&rsquo; ke &lsquo;udah siap masak.&rsquo;
           </h2>
 
-          <div className="mt-20 space-y-24">
+          <div className="mx-auto mt-20 max-w-4xl space-y-24">
             {/* Step 1 — image left, text right */}
             <div className="flex flex-col items-center gap-12 md:flex-row">
               <div className="relative flex-shrink-0">
@@ -345,7 +344,7 @@ export default function HomePage() {
                 <PhoneMockup
                   src="/illustrations/meal-plan.png"
                   alt="Meal plan screen"
-                  className="max-w-[260px]"
+                  className="max-w-[200px] md:max-w-[260px]"
                 />
               </div>
               <div className="flex-1">
@@ -373,8 +372,20 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Step 2 — text left, image right */}
-            <div className="flex flex-col-reverse items-center gap-12 md:flex-row">
+            {/* Step 2 — image left on mobile, text left + image right on desktop */}
+            <div className="flex flex-col items-center gap-12 md:flex-row-reverse">
+              <div className="relative flex-shrink-0">
+                <div className="pointer-events-none absolute -top-4 -left-4 grid grid-cols-3 gap-1.5">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <div key={i} className="h-1.5 w-1.5 rounded-full bg-primary-100" />
+                  ))}
+                </div>
+                <PhoneMockup
+                  src="/illustrations/shopping-list.png"
+                  alt="Shopping list screen"
+                  className="max-w-[200px] md:max-w-[260px]"
+                />
+              </div>
               <div className="flex-1">
                 <span className="text-sm font-semibold uppercase tracking-wide text-accent">
                   Langkah 2
@@ -397,18 +408,6 @@ export default function HomePage() {
                   </svg>
                 </a>
               </div>
-              <div className="relative flex-shrink-0">
-                <div className="pointer-events-none absolute -top-4 -left-4 grid grid-cols-3 gap-1.5">
-                  {Array.from({ length: 9 }).map((_, i) => (
-                    <div key={i} className="h-1.5 w-1.5 rounded-full bg-primary-100" />
-                  ))}
-                </div>
-                <PhoneMockup
-                  src="/illustrations/shopping-list.png"
-                  alt="Shopping list screen"
-                  className="max-w-[260px]"
-                />
-              </div>
             </div>
 
             {/* Step 3 — image left, text right */}
@@ -422,7 +421,7 @@ export default function HomePage() {
                 <PhoneMockup
                   src="/illustrations/recipe.png"
                   alt="Recipe detail screen"
-                  className="max-w-[260px]"
+                  className="max-w-[200px] md:max-w-[260px]"
                 />
               </div>
               <div className="flex-1">
@@ -469,14 +468,10 @@ export default function HomePage() {
             menu pertama kamu sekarang.
           </p>
 
-          <a
-            href="#"
-            className="mt-10 inline-block rounded-full bg-white px-8 py-4 text-lg font-semibold text-primary-500 shadow-lg transition-colors hover:bg-neutral-50"
-          >
+          <p className="mt-10 text-sm font-semibold uppercase tracking-wide text-white/70">
             Download Sekarang
-          </a>
-
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
+          </p>
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
             <AppleStoreButton variant="outline" />
             <PlayStoreButton variant="outline" />
           </div>
