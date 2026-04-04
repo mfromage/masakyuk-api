@@ -5,11 +5,11 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/affiliates/import
+  url: {{baseUrl}}/affiliates/import
   body: multipartForm
   auth: none
 }
 
 body:multipart-form {
-  file: @file(../../data/affiliates.csv)
+  file: @file(/Users/mmichael/Code/masakyuk/csvs/affiliates result.csv)
 }

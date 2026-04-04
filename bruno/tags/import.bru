@@ -5,11 +5,11 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/tags/import
+  url: {{baseUrl}}/tags/import
   body: multipartForm
   auth: none
 }
 
 body:multipart-form {
-  file: @file(../../data/tags.csv)
+  file: @file(/Users/mmichael/Code/masakyuk/csvs/tags.csv)
 }
