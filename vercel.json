@@ -7,5 +7,10 @@
       "maxDuration": 30
     }
   },
+  "redirects": [
+    { "source": "/affiliates/:path*", "destination": "/api/affiliates/:path*" },
+    { "source": "/recipes/:path*", "destination": "/api/recipes/:path*" },
+    { "source": "/tags/:path*", "destination": "/api/tags/:path*" }
+  ],
   "rewrites": [{ "source": "/api/:path*", "destination": "/api/index.ts" }]
 }
